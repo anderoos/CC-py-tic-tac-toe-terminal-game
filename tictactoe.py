@@ -20,12 +20,13 @@ def print_board(board):
     print("----------")
     print(f"{board[6]} | {board[7]} | {board[8]} ")
 
-# def playagain():
-#         ready_status = str(input("Play again? "))
-#         if ready_status == "no" or ready_status == "No":
-#             print("Terminating game...")
-#         elif ready_status == "yes" or ready_status == "Yes":
-#             game_start()
+def playagain():
+    ready_status = str(input("Play again? "))
+    if ready_status == "no" or ready_status == "No":
+        print("Terminating game...")
+        sys.exit()
+    elif ready_status == "yes" or ready_status == "Yes":
+        game_restart()
 
 def game_menu():
     print("Welcome! Ready to play some tic tac toe?")
@@ -54,12 +55,7 @@ def check_win_conditions():
                 print("Player X Wins!")
                 time.sleep(1)
                 # Reset game status, ask players to play again
-                # playagain()
-                return True
-            elif " " not in board_status:
-                print("Tied!")
-                time.sleep(1)
-                # playagain()
+                playagain()
                 return True
             elif board_status[winning_set[0]] == board_status[winning_set[1]] == board_status[winning_set[2]] == "O":
                 print("Player O Wins!")
@@ -69,19 +65,28 @@ def check_win_conditions():
                 print("Player O Wins!")
                 time.sleep(1)
                 # Reset game status, ask players to play again
-                # playagain()
+                playagain()
+                return True
+            # Checks for empty spaces
+            elif " " not in board_status:
+                print("Tied!")
+                time.sleep(1)
+                playagain()
                 return True
             else:
                 return False
-
+    
+# Player X's move
 def playerX():
     time.sleep(1)
     print("Player X, its your turn!")
     time.sleep(1)
     print("Here are your moves:")
     time.sleep(1)
+    # Print moveset, asks for input
     print(list(move for move in moveset_disp.items()))
     moveX = int(input("Place your X: "))
+    # Checks if space is occupied
     if board_status[moveX] == " ":
         board_status[moveX] = "X"
         print_board(board_status)
@@ -94,7 +99,7 @@ def playerX():
         else:
             print("That space seems occupied. Try again.")
             moveX = int(input("Place your X: "))
-
+# Player O's Move
 def playerO():
     time.sleep(1)
     print("Player O, its your turn!")
@@ -116,16 +121,22 @@ def playerO():
             print("That space seems occupied. Try again.")
             moveO = int(input("Place your O: "))
 
+# Checks for win conditions, loops through check function and player turn
 def game_start():
+    check_win_conditions()
     while check_win_conditions() == False:
         playerX()
         check_win_conditions()
         playerO()
         check_win_conditions()
 
+# Reset starting board and reinitializes game
 def game_restart():
-    board_status = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
-    return board_status
+    global board_status
+    board_status  = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    game_start()
+
+# Initialize game
 game_menu()
 
 
